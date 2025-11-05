@@ -6,19 +6,17 @@ Experiencia en vivo: [ENLACE A TU GITHUB PAGES] (Ej: https://www.google.com/sear
 
 Integrantes:
 
-[Nombre Alumno 1]
 
-[Nombre Alumno 2]
 
 1. Investigación Inicial
 
-🧠 Justificación del Tema
+Justificación del Tema
 
 Tema elegido: Arquitectura de Computadoras – “Explorando el interior de una PC en Realidad Aumentada”.
 
 La arquitectura de computadoras es una base esencial de la carrera. Entender la interconexión física de los componentes (CPU, memoria, GPU) es crucial para comprender el funcionamiento y rendimiento de los sistemas. La RA ofrece una visualización inmersiva y dinámica que supera las limitaciones de diagramas planos, facilitando la comprensión de conceptos abstractos.
 
-📚 Referencias Técnicas y Conceptuales
+ Referencias Técnicas y Conceptuales
 
 Frameworks de RA Web:
 
@@ -28,13 +26,9 @@ A-Frame: [https://aframe.io/] - Framework para construir escenas 3D/VR/AR usando
 
 Recursos 3D/Conceptuales:
 
-[Artículos sobre RA en la educación]
-
-[Modelos de referencia de Sketchfab]
 
 2. Diseño de la Experiencia
-
-🎯 Objetivo Pedagógico
+ Objetivo Pedagógico
 
 Identificación: El estudiante identificará y localizará los componentes principales de una PC.
 
@@ -42,7 +36,7 @@ Función: El estudiante comprenderá la función básica de la Placa Madre, CPU,
 
 Conexión: El estudiante visualizará la interconexión y la disposición espacial de los elementos.
 
-🧩 Tipo de RA
+ Tipo de RA
 
 RA basada en imagen (Image Tracking): Se utiliza un marcador visual de alto contraste.
 
@@ -56,7 +50,7 @@ Aparece el modelo 3D esquemático de los componentes de la PC.
 
 El usuario toca un componente (ej. CPU) para activar un texto emergente con su descripción.
 
-🎨 Elementos Visuales
+ Elementos Visuales
 
 Marcador: Se utiliza un marcador de prueba estable (que debe ser reemplazado por uno propio).
 
@@ -64,11 +58,11 @@ Modelos 3D: Cajas (<a-box>) con colores diferenciados para representar esquemát
 
 3. Desarrollo Técnico
 
-🛠️ Tecnología Seleccionada
+ Tecnología Seleccionada
 
 La elección de MindAR + A-Frame fue por su enfoque en la WebAR y su ligereza, permitiendo que la experiencia se ejecute directamente en el navegador de cualquier dispositivo móvil sin necesidad de instalaciones adicionales.
 
-⚙️ Implementación
+ Implementación
 
 La experiencia está contenida en index.html.
 
@@ -76,7 +70,7 @@ La experiencia está contenida en index.html.
 
 Interacción: Se usa un componente JavaScript que escucha el evento click sobre cualquier objeto con la clase .clickable, actualizando un elemento <a-text> flotante con la información correspondiente.
 
-🐛 Dificultades y Soluciones
+ Dificultades y Soluciones
 
 Dificultad #1: Errores de seguridad de la cámara y carga de assets al ejecutar el archivo HTML localmente (usando file://...).
 
