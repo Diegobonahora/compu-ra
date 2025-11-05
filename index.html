@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR - Arquitectura de PC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.min.js"></script>
+
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        /* 3. Estilos para la interfaz de escaneo (Overlay) */
+        #scanning-ui {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        #scanning-ui h2 {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        #scanning-ui img {
+            width: 80%;
+            max-width: 300px;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+
+        /* Oculta la UI de escaneo cuando MindAR esté listo */
+        body.mindar-ready #scanning-ui {
+            display: none;
+        }
+
+        /* Clase para objetos clickeables */
+        .clickable { }
+    </style>
+</head>
+<body>
+    <div id="scanning-ui">
+        <h2>Apunta tu cámara al marcador</h2>
+        <p>Abre 'marcador.html' en otra pantalla (PC o tablet)</p>
+        <img src="https://hiukim.github.io/mind-ar-js-demos/assets/card/card.png" alt="Marcador para escanear" />
+    </div>
+
+    <a-scene 
+        mindar-image="imageTargetSrc: https://hiukim.github.io/mind-ar-js-demos/assets/card/card.mind; uiScanning: #scanning-ui" 
+        vr-mode-ui="enabled: false" 
+        device-orientation-permission-ui="enabled: false"
+        color-space="sRGB" 
+        renderer="colorManagement: true, physicallyCorrectLights: true">
+
+        <a-camera position="0 0 0" look-controls="enabled: false">
+            <a-cursor 
+                raycaster="objects: .clickable"
+                fuse="false" 
+                id="cursor"
+                color="#00E5FF"
+                ring-radius-inner="0.05"
+                ring-radius-outer="0.08"
+                >
+            </a-cursor>
+        </a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+            
+            <a-box 
+                color="#1E5C0B" 
+                scale="1.2 0.1 1.5" 
+                position="0 -0.1 0"
+                class="clickable"
+                id="motherboard"
+                >
+            </a-box>
+
+            <a-box 
+                color="#555555" 
+                scale="0.25 0.2 0.25" 
+                position="0 0.05 0.2"
+                class="clickable"
+                id="cpu"
+                >
+            </a-box>
+
+            <a-box 
+                color="#0033A0" 
+                scale="0.1 0.2 0.7" 
+                position="-0.3 0.05 -0.3"
+                class="clickable"
+                id="ram"
+                >
+            </a-box>
+             <a-box 
+                color="#0033A0" 
+                scale="0.1 0.2 0.7" 
+                position="-0.3 0.05 -0.6"
+                class="clickable"
+                id="ram"
+                >
+            </a-box>
+
+            <a-box 
+                color="#222222" 
+                scale="0.2 0.3 1.0" 
+                position="0.3 0.1 -0.4"
+                class="clickable"
+                id="gpu"
+                >
+            </a-box>
+
+            <a-text 
+                id="info-text"
+                value="Haz clic en un componente"
+                color="white"
+                align="center"
+                width="2"
+                position="0 0.5 0.8" 
+                scale="0.5 0.5 0.5"
+                visible="true"
+                >
+            </a-text>
+
+        </a-entity>
+    </a-scene>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sceneEl = document.querySelector('a-scene');
+            const infoText = document.querySelector('#info-text');
+
+            // Mapeo de IDs a textos de información
+            const infoData = {
+                'motherboard': 'Placa Madre:\nConecta todos los componentes.',
+                'cpu': 'CPU (Procesador):\nEl cerebro de la PC. Ejecuta las instrucciones.',
+                'ram': 'Memoria RAM:\nAlmacenamiento temporal rapido.',
+                'gpu': 'GPU (Placa de Video):\nProcesa los graficos y el video.'
+            };
+
+            // Asignar eventos a todos los componentes "clickable"
+            const clickables = document.querySelectorAll('.clickable');
+            
+            clickables.forEach(element => {
+                element.addEventListener('click', (event) => {
+                    const info = infoData[element.id];
+                    
+                    if (info) {
+                        // Actualizar y mostrar el texto
+                        infoText.setAttribute('value', info);
+                        infoText.setAttribute('visible', 'true');
+                    }
+                    
+                    // Ocultar el texto después de 4 segundos
+                    setTimeout(() => {
+                        infoText.setAttribute('visible', 'false');
+                    }, 4000); 
+                });
+            });
+        });
+    </script>
+</body>
+</html>
