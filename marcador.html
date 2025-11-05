@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
 <head>
     <title>Marcador AR</title>
@@ -8,6 +8,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -19,10 +20,18 @@
         .container {
             max-width: 90%;
         }
+        h1 {
+            margin-bottom: 5px;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
         img {
             width: 100%;
             max-width: 500px;
-            border: 10px solid white;
+            /* Borde claro para que destaque el objetivo */
+            border: 10px solid #CCCCCC;
             border-radius: 5px;
         }
     </style>
@@ -30,7 +39,8 @@
 <body>
     <div class="container">
         <h1>Escanea esta imagen</h1>
-        <p>Usa este marcador con la app de AR (index.html) en tu celular.</p>
+        <p>Abre la URL de 'index.html' en tu celular y apúntalo a este marcador.</p>
+        <!-- Marcador de ejemplo -->
         <img src="https://hiukim.github.io/mind-ar-js-demos/assets/card/card.png" alt="Marcador AR" />
     </div>
 </body>

@@ -4,18 +4,17 @@
     <title>AR - Arquitectura de PC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- LIBRERÍAS CLAVE -->
+    <!-- A-Frame: Framework para construir escenas 3D en el navegador -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    
+    <!-- MindAR: Extensión de A-Frame para Image Tracking (RA basada en imágenes) -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.min.js"></script>
 
     <style>
-        /* Estilos generales */
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
+        /* Estilos base para asegurar que la escena AR ocupe toda la pantalla */
+        body { margin: 0; font-family: sans-serif; overflow: hidden; }
 
-        /* 3. Estilos para la interfaz de escaneo (Overlay) */
+        /* Estilos del OVERLAY de ESCANEO (lo que ves antes de detectar el marcador) */
         #scanning-ui {
             position: fixed;
             top: 0;
@@ -29,43 +28,47 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        #scanning-ui h2 {
-            text-align: center;
-            padding: 0 20px;
-        }
+        #scanning-ui h2 { text-align: center; }
 
         #scanning-ui img {
             width: 80%;
             max-width: 300px;
             border: 5px solid white;
             border-radius: 10px;
+            margin-top: 20px;
         }
 
-        /* Oculta la UI de escaneo cuando MindAR esté listo */
-        body.mindar-ready #scanning-ui {
-            display: none;
-        }
-
-        /* Clase para objetos clickeables */
-        .clickable { }
+        /* Oculta la interfaz de escaneo cuando MindAR detecta un marcador */
+        body.mindar-ready #scanning-ui { display: none; }
+        
+        /* Clase de marcador para los objetos 3D interactivos */
+        .clickable { cursor: pointer; }
     </style>
 </head>
 <body>
+    
+    <!-- Interfaz de Escaneo: Se muestra hasta que se encuentra el marcador -->
     <div id="scanning-ui">
         <h2>Apunta tu cámara al marcador</h2>
-        <p>Abre 'marcador.html' en otra pantalla (PC o tablet)</p>
+        <p>Abre 'marcador.html' en otra pantalla y escanea la imagen.</p>
+        <!-- Marcador de ejemplo de MindAR. Usamos una URL estable. -->
         <img src="https://hiukim.github.io/mind-ar-js-demos/assets/card/card.png" alt="Marcador para escanear" />
     </div>
 
+    <!-- COMIENZO DE LA ESCENA AR -->
     <a-scene 
         mindar-image="imageTargetSrc: https://hiukim.github.io/mind-ar-js-demos/assets/card/card.mind; uiScanning: #scanning-ui" 
         vr-mode-ui="enabled: false" 
         device-orientation-permission-ui="enabled: false"
         color-space="sRGB" 
-        renderer="colorManagement: true, physicallyCorrectLights: true">
+        renderer="colorManagement: true, physicallyCorrectLights: true"
+        >
 
+        <!-- Cámara de Realidad Aumentada con Cursor para Interacción (para clicks) -->
         <a-camera position="0 0 0" look-controls="enabled: false">
             <a-cursor 
                 raycaster="objects: .clickable"
@@ -78,8 +81,12 @@
             </a-cursor>
         </a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0">
+        <!-- ANCLA DEL MARCADOR: Todo lo que esté aquí dentro aparece sobre el marcador. -->
+        <a-entity mindar-image-target="targetIndex: 0"> 
             
+            <!-- MODELOS 3D (Componentes de PC representados como cajas) -->
+            
+            <!-- Placa Madre (Motherboard) - Es la base plana -->
             <a-box 
                 color="#1E5C0B" 
                 scale="1.2 0.1 1.5" 
@@ -89,6 +96,7 @@
                 >
             </a-box>
 
+            <!-- CPU (Procesador) -->
             <a-box 
                 color="#555555" 
                 scale="0.25 0.2 0.25" 
@@ -98,6 +106,7 @@
                 >
             </a-box>
 
+            <!-- RAM 1 -->
             <a-box 
                 color="#0033A0" 
                 scale="0.1 0.2 0.7" 
@@ -106,7 +115,8 @@
                 id="ram"
                 >
             </a-box>
-             <a-box 
+             <!-- RAM 2 -->
+            <a-box 
                 color="#0033A0" 
                 scale="0.1 0.2 0.7" 
                 position="-0.3 0.05 -0.6"
@@ -115,6 +125,7 @@
                 >
             </a-box>
 
+            <!-- GPU (Placa de Video) - Se extiende desde un slot (simulado) -->
             <a-box 
                 color="#222222" 
                 scale="0.2 0.3 1.0" 
@@ -124,35 +135,37 @@
                 >
             </a-box>
 
+            <!-- Texto de Información: Flotará sobre los componentes -->
             <a-text 
                 id="info-text"
-                value="Haz clic en un componente"
-                color="white"
+                value="Haz clic en un componente para ver su descripción"
+                color="#FFFFFF"
                 align="center"
                 width="2"
                 position="0 0.5 0.8" 
                 scale="0.5 0.5 0.5"
                 visible="true"
+                geometry="primitive: plane; width: 2.2; height: 0.4" 
+                material="color: #000000; opacity: 0.8"
                 >
             </a-text>
 
         </a-entity>
     </a-scene>
 
+    <!-- LÓGICA DE INTERACCIÓN (JavaScript) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const sceneEl = document.querySelector('a-scene');
             const infoText = document.querySelector('#info-text');
 
-            // Mapeo de IDs a textos de información
+            // Mapeo de IDs de componentes a sus descripciones
             const infoData = {
-                'motherboard': 'Placa Madre:\nConecta todos los componentes.',
-                'cpu': 'CPU (Procesador):\nEl cerebro de la PC. Ejecuta las instrucciones.',
-                'ram': 'Memoria RAM:\nAlmacenamiento temporal rapido.',
-                'gpu': 'GPU (Placa de Video):\nProcesa los graficos y el video.'
+                'motherboard': 'Placa Madre (Motherboard):\nEl circuito principal que conecta y comunica a todos los componentes del sistema.',
+                'cpu': 'CPU (Unidad Central de Procesamiento):\nEl cerebro de la computadora. Ejecuta las instrucciones y procesa los datos.',
+                'ram': 'Memoria RAM:\nMemoria de acceso rápido y temporal. Almacena los datos que se están utilizando activamente.',
+                'gpu': 'GPU (Unidad de Procesamiento Gráfico):\nEspecializada en renderizar imágenes, videos y gráficos 3D, liberando carga a la CPU.'
             };
 
-            // Asignar eventos a todos los componentes "clickable"
             const clickables = document.querySelectorAll('.clickable');
             
             clickables.forEach(element => {
@@ -160,15 +173,20 @@
                     const info = infoData[element.id];
                     
                     if (info) {
-                        // Actualizar y mostrar el texto
+                        // 1. Actualiza el texto y lo hace visible
                         infoText.setAttribute('value', info);
                         infoText.setAttribute('visible', 'true');
+                        // 2. Coloca la posición del texto ligeramente sobre el elemento clickeado (mejor usabilidad)
+                        const elementPos = element.getAttribute('position');
+                        infoText.setAttribute('position', { x: elementPos.x, y: 0.5, z: 0.8 });
                     }
                     
-                    // Ocultar el texto después de 4 segundos
+                    // 3. Oculta el texto después de 6 segundos
                     setTimeout(() => {
                         infoText.setAttribute('visible', 'false');
-                    }, 4000); 
+                        // Vuelve a poner el texto inicial después de ocultar
+                        infoText.setAttribute('value', 'Haz clic en un componente para ver su descripción');
+                    }, 6000); 
                 });
             });
         });
